@@ -29,8 +29,6 @@ An example output of the second query:
 
 */
 
-# The following will create a temporary table and add data to compare actual hits data to expected
-# hit data.
 CREATE TEMPORARY TABLE test SELECT
 py.player_name,
 YEAR(py.game_date) as year,

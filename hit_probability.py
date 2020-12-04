@@ -55,6 +55,8 @@ def json_edit(json_data):
             del element['xbad']
         if 'xban' in element:
             del element['xban']
+        if 'eventPretty' in element:
+            del element['eventPretty']
 
 def script_start():
     print("Welcome to my Python Script for baseball stuff.")

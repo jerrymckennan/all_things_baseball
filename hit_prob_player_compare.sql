@@ -9,7 +9,7 @@ and a couple of queries I used to actually compare them.
 CREATE TEMPORARY TABLE compare SELECT
 py.player_name,
 YEAR(py.game_date) as year,
-Py.bb_walk,
+py.bb_walk,
 py.is_1b,
 py.is_2b,
 py.is_3b,
@@ -24,7 +24,7 @@ INSERT INTO compare (player_name,year,bb_walk,is_1b,is_2b,is_3b,is_hr)
 SELECT
 py.player_name,
 YEAR(py.game_date) as year,
-Py.bb_walk,
+py.bb_walk,
 py.is_1b,
 py.is_2b,
 py.is_3b,

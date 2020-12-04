@@ -1,8 +1,7 @@
 /*
 
 I was wanting to compare to specific players over the course of a large sample size. To do so, I needed to create a temporary table that I could then
-import my data for each one over their last 1,500 PA each. This is what I used to create the temporary table, insert the data from the second player,
-and a couple of queries I used to actually compare them.
+import my data for each one over their last 1,500 PA each. This is what I used to create the temporary table and to insert the data from the second player.
 
 */
 
@@ -34,6 +33,12 @@ WHERE py.player_name LIKE 'Rosar%'
 GROUP BY py.player_name, py.game_date, py.ab_num, event
 ORDER BY py.game_date DESC
 LIMIT 1500;
+
+/*
+
+These are a couple of queries I used to compare the players actual stats
+
+*/
 
 SELECT
 player_name,

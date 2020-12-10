@@ -1,2 +1,2 @@
 # all_things_baseball
-This is where I'm putting in my scripts for baseball things
+Location for Python and MySQL scripts for gathering and using data

@@ -15,7 +15,6 @@ mysql_pass = getpass.getpass()
 answer = input("Select wOBA or hits: ")
 name1 = input("Specify the last name of the first player: ")
 year = input("Select a year: ")
-save = input("Save plot as picture, yes or no?: ")
 
 # This is to connect to a local MySQL connection. Will need to fill in host and user here between the ''
 connection = pymysql.connect(host='',
@@ -30,9 +29,9 @@ try:
     with connection.cursor() as cursor:
         sql_mode = "SET SESSION sql_mode=''"
         cursor.execute(sql_mode)
-        ev_table = "CREATE TEMPORARY TABLE ev SELECT ev FROM prob WHERE year = "+year+";"
+        ev_table = "CREATE TEMPORARY TABLE ev SELECT DISTINCT ev FROM prob WHERE year = "+year+";"
         cursor.execute(ev_table)
-        la_table = "CREATE TEMPORARY TABLE launch_angle SELECT launch_angle FROM prob WHERE year = "+year+";"
+        la_table = "CREATE TEMPORARY TABLE launch_angle SELECT DISTINCT launch_angle FROM prob WHERE year = "+year+";"
         cursor.execute(la_table)
         ev_query = "SELECT DISTINCT ev FROM ev;"
         la_query = "SELECT DISTINCT launch_angle FROM launch_angle;"
@@ -69,15 +68,5 @@ plt.hist2d(ev_data_use, la_data_use, bins=(ev_int,la_int), cmap=plt.cm.Reds, wei
 plt.plot(player_ev_data, player_la_data, linestyle='none', marker='.', c="darkorange", markersize=3, label=player_name_data)
 plt.xlabel('EV')
 plt.ylabel('Launch Angle')
-
-# This will save the graph as if you answered yes at the beginning. Otherwise it just displays it.
-if save == "yes":
-    location = input("Enter location and file name to save graph: ")
-    # Add a basic title
-    plt.title("EV and LA histogram with "+name1+" BIP overlay for "+year)
-    plt.savefig(location, facecolor='white')
-    plt.show()
-else:
-    # Add a basic title
-    plt.title("EV and LA histogram with "+name1+" BIP overlay for "+year)
-    plt.show()
+plt.title("EV and LA histogram with "+name1+" BIP overlay for "+year)
+plt.show()

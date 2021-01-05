@@ -27,9 +27,9 @@ try:
     with connection.cursor() as cursor:
         sql_mode = "SET SESSION sql_mode=''"
         cursor.execute(sql_mode)
-        ev_table = "CREATE TEMPORARY TABLE ev SELECT ev FROM prob WHERE year = "+year+";"
+        ev_table = "CREATE TEMPORARY TABLE ev SELECT DISTINCT ev FROM prob WHERE year = "+year+";"
         cursor.execute(ev_table)
-        la_table = "CREATE TEMPORARY TABLE launch_angle SELECT launch_angle FROM prob WHERE year = "+year+";"
+        la_table = "CREATE TEMPORARY TABLE launch_angle SELECT DISTINCT launch_angle FROM prob WHERE year = "+year+";"
         cursor.execute(la_table)
         data_query = "SELECT ev, launch_angle, n_hip, n_hits, woba FROM prob WHERE year = "+year+" AND ev > 0 ORDER BY year, ev, launch_angle;"
         ev_query = "SELECT DISTINCT COUNT(ev) FROM ev;"

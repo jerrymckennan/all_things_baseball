@@ -53,6 +53,10 @@ la_data_use = data["launch_angle"].to_numpy()
 player_ev_data = player_data["ev"].to_numpy()
 player_la_data = player_data["launch_angle"].to_numpy()
 player_name_data = player_data["player_name"]
+
+# Using this to make sure the correct number of bins are displayed each time
+ev_int = int(ev_data.iloc[0])
+la_int = int(la_data.iloc[0])
     
 # This is based on the variable answered in the beginning. 
 if answer == "wOBA":
@@ -61,8 +65,7 @@ if answer == "hits":
     weighted_data = data["n_hip"].to_numpy()
 
 # This is the graphing section
-# The bins need to change occassionally otherwise the data doesn't look as sharp. I'm still working on making that as a variable
-plt.hist2d(ev_data_use, la_data_use, bins=(109,176), cmap=plt.cm.Reds, weights=weighted_data)
+plt.hist2d(ev_data_use, la_data_use, bins=(ev_int,la_int), cmap=plt.cm.Reds, weights=weighted_data)
 plt.plot(player_ev_data, player_la_data, linestyle='none', marker='.', c="darkorange", markersize=3, label=player_name_data)
 plt.xlabel('EV')
 plt.ylabel('Launch Angle')

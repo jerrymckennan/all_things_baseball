@@ -27,18 +27,29 @@ try:
     with connection.cursor() as cursor:
         sql_mode = "SET SESSION sql_mode=''"
         cursor.execute(sql_mode)
+        ev_table = "CREATE TEMPORARY TABLE ev SELECT ev FROM prob WHERE year = "+year+";"
+        cursor.execute(ev_table)
+        la_table = "CREATE TEMPORARY TABLE launch_angle SELECT launch_angle FROM prob WHERE year = "+year+";"
+        cursor.execute(la_table)
         data_query = "SELECT ev, launch_angle, n_hip, n_hits, woba FROM prob WHERE year = "+year+" AND ev > 0 ORDER BY year, ev, launch_angle;"
+        ev_query = "SELECT DISTINCT COUNT(ev) FROM ev;"
+        la_query = "SELECT DISTINCT COUNT(launch_angle) FROM launch_angle;"
         data = pd.read_sql(data_query, connection)
+        ev_data = pd.read_sql(ev_query, connection)
+        la_data = pd.read_sql(la_query, connection)
         player_query = "SELECT ev, launch_angle, hit FROM player WHERE at_bat > 0 AND player_name LIKE '"+name+"%' AND YEAR(game_date) = "+year+" AND ball_in_play > 0 AND ev > 0;"
         player_data = pd.read_sql(player_query, connection)
         player_data.loc[player_data['hit'] == 0, 'hit'] = 'out'
         player_data.loc[player_data['hit'] == 1, 'hit'] = 'hit'
 finally:
     connection.close()
+    
+# Using this to make sure the correct number of bins are displayed each time
+ev_int = int(ev_data.iloc[0])
+la_int = int(la_data.iloc[0])
 
 # I realized you have the option to save the graph without needing to do so via the script. So I left that out here.
 # This graph also shows the difference between hits and outs for the balls in play.
-# The bins need to change occassionally otherwise the data doesn't look as sharp. I'm still working on making that as a variable
 # I also need to work on the legend. For some reason there is an extra label in there...
 sns.displot(data, x="ev", y="launch_angle", hue="woba", bins=(109,176), weights="woba", palette="Reds", height=6, aspect=1.5, legend=False)
 sns.scatterplot(data=player_data, x="ev", y="launch_angle", hue="hit", size=1, palette="Purples", legend='full')

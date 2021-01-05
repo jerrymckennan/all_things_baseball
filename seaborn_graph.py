@@ -51,7 +51,7 @@ la_int = int(la_data.iloc[0])
 # I realized you have the option to save the graph without needing to do so via the script. So I left that out here.
 # This graph also shows the difference between hits and outs for the balls in play.
 # I also need to work on the legend. For some reason there is an extra label in there...
-sns.displot(data, x="ev", y="launch_angle", hue="woba", bins=(109,176), weights="woba", palette="Reds", height=6, aspect=1.5, legend=False)
+sns.displot(data, x="ev", y="launch_angle", hue="woba", bins=(ev_int,la_int), weights="woba", palette="Reds", height=6, aspect=1.5, legend=False)
 sns.scatterplot(data=player_data, x="ev", y="launch_angle", hue="hit", size=1, palette="Purples", legend='full')
 plt.legend(bbox_to_anchor=(1.01, 1), borderaxespad=0)
 plt.xlabel('EV')

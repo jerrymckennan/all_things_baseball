@@ -52,6 +52,7 @@ try:
         player_data.loc[player_data['event'] == "fielders_choice_out", 'event'] = "out"
         player_data.loc[player_data['event'] == "sac_fly_double_play", 'event'] = "out"
         player_data.loc[player_data['event'] == "home_run", 'event'] = "home run"
+        # The next 6 is to also increase the size of the dot based on type of hit. It's not used right now, but it is set up to play with.
         player_data.loc[player_data['event'] == "single", 'size'] = (1*.25)
         player_data.loc[player_data['event'] == "double", 'size'] = (2*.25)
         player_data.loc[player_data['event'] == "triple", 'size'] = (3*.25)

@@ -15,8 +15,8 @@ name = input("Specify the last name of the player: ")
 year = input("Select a year: ")
 
 # This is to connect to a local MySQL connection. Will need to fill in host and user here between the ''
-connection = pymysql.connect(host='',
-                             user='',
+connection = pymysql.connect(host='localhost',
+                             user='root',
                              password=mysql_pass,
                              db='hit_probability',
                              charset='utf8mb4',
@@ -37,10 +37,28 @@ try:
         data = pd.read_sql(data_query, connection)
         ev_data = pd.read_sql(ev_query, connection)
         la_data = pd.read_sql(la_query, connection)
-        player_query = "SELECT ev, launch_angle, hit FROM player WHERE at_bat > 0 AND player_name LIKE '"+name+"%' AND YEAR(game_date) = "+year+" AND ball_in_play > 0 AND ev > 0;"
+        player_query = "SELECT ev, launch_angle, hit, event FROM player WHERE at_bat > 0 AND player_name LIKE '"+name+"%' AND YEAR(game_date) = "+year+" AND ball_in_play > 0 AND ev > 0;"
         player_data = pd.read_sql(player_query, connection)
         player_data.loc[player_data['hit'] == 0, 'hit'] = 'out'
         player_data.loc[player_data['hit'] == 1, 'hit'] = 'hit'
+        player_data.loc[player_data['event'] == "field_out", 'event'] = "out"
+        player_data.loc[player_data['event'] == "force_out", 'event'] = "out"
+        player_data.loc[player_data['event'] == "field_error", 'event'] = "error"
+        player_data.loc[player_data['event'] == "sac_fly", 'event'] = "out"
+        player_data.loc[player_data['event'] == "fielders_choice", 'event'] = "out"
+        player_data.loc[player_data['event'] == "grounded_into_double_play", 'event'] = "out"
+        player_data.loc[player_data['event'] == "double_play", 'event'] = "out"
+        player_data.loc[player_data['event'] == "sac_bunt", 'event'] = "out"
+        player_data.loc[player_data['event'] == "fielders_choice_out", 'event'] = "out"
+        player_data.loc[player_data['event'] == "sac_fly_double_play", 'event'] = "out"
+        player_data.loc[player_data['event'] == "home_run", 'event'] = "home run"
+        player_data.loc[player_data['event'] == "single", 'size'] = (1*.25)
+        player_data.loc[player_data['event'] == "double", 'size'] = (2*.25)
+        player_data.loc[player_data['event'] == "triple", 'size'] = (3*.25)
+        player_data.loc[player_data['event'] == "home run", 'size'] = (4*.25)
+        player_data.loc[player_data['event'] == "out", 'size'] = (1*.25)
+        player_data.loc[player_data['event'] == "error", 'size'] = (1*.25)
+        
 finally:
     connection.close()
     
@@ -48,13 +66,11 @@ finally:
 ev_int = int(ev_data.iloc[0])
 la_int = int(la_data.iloc[0])
 
-# I realized you have the option to save the graph without needing to do so via the script. So I left that out here.
-# This graph also shows the difference between hits and outs for the balls in play.
-# I also need to work on the legend. For some reason there is an extra label in there...
-sns.displot(data, x="ev", y="launch_angle", hue="woba", bins=(ev_int,la_int), weights="woba", palette="Reds", height=6, aspect=1.5, legend=False)
-sns.scatterplot(data=player_data, x="ev", y="launch_angle", hue="hit", size=1, palette="Purples", legend='full')
-plt.legend(bbox_to_anchor=(1.01, 1), borderaxespad=0)
+# This creates a proper legend that includes colors for out, error, and each type of hit
+sns.histplot(data, x="ev", y="launch_angle", hue="woba", bins=(ev_int,la_int), weights="woba", palette="Reds", legend='brief')
+sns.scatterplot(data=player_data, x="ev", y="launch_angle", hue="event", hue_order=['out', 'error', 'single', 'double', 'triple', 'home run'], palette="flare", legend='full')
+plt.legend(bbox_to_anchor=(1.01, 1), borderaxespad=0, loc='upper left')
 plt.xlabel('EV')
 plt.ylabel('Launch Angle')
-plt.title("EV and LA histogram with "+name+" BIP overlay for "+year)
+plt.title("EV and LA histogram with "+name+" ball in play overlay for "+year)
 plt.show()

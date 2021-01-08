@@ -33,10 +33,12 @@ while True:
     except pymysql.err.OperationalError as e:
         err_no = e.args[0]
         print(err_no)
+        # This is for if MySQL server is shutdown
         if err_no == 2003:
             print("MySQL Server is currently shutdown. Let me start that for you.")
             os.system('mysql.server start')
             print("MySQL Server should be up and running.")
+        # This is for the wrong password
         if err_no == 1045:
             print("Error with password, re-enter:")
             mysql_pass = getpass.getpass()

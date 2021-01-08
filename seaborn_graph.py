@@ -16,28 +16,37 @@ year = input("Select a year: ")
 
 # This is to connect to a local MySQL connection. Will need to fill in host and user here between the ''
 # It will check to make sure the MySQL server is up. Since mine is local on my laptop, I don't always have 
-# it running. 
-try:
-    # Creates the connection to the MySQL database
-    connection = pymysql.connect(host='',
-                         user='',
+# it running. It will also check on the password letting your re-enter without needing to re-run the script.
+while True:
+    try:
+        # Creates the connection to the MySQL database
+        connection = pymysql.connect(host='',
+                             user='',
+                             password=mysql_pass,
+                             db='hit_probability',
+                             charset='utf8mb4',
+                             cursorclass=pymysql.cursors.DictCursor)
+        break
+
+    except pymysql.err.OperationalError as e:
+        err_no = e.args[0]
+        print(err_no)
+        # This is for if MySQL server is shutdown
+        if err_no == 2003:
+            print("MySQL Server is currently shutdown. Let me start that for you.")
+            os.system('mysql.server start')
+            print("MySQL Server should be up and running.")
+        # This is for the wrong password
+        if err_no == 1045:
+            print("Error with password, re-enter:")
+            mysql_pass = getpass.getpass()
+    finally:
+        connection = pymysql.connect(host='localhost',
+                         user='root',
                          password=mysql_pass,
                          db='hit_probability',
                          charset='utf8mb4',
                          cursorclass=pymysql.cursors.DictCursor)
-except pymysql.err.OperationalError:
-    # This is if the MySQL Server is not yet started
-    print("MySQL Server is currently shutdown. Let me start that for you.")
-    os.system('mysql.server start')
-    print("MySQL Server should be up and running.")
-
-finally:
-    connection = pymysql.connect(host='',
-                     user='',
-                     password=mysql_pass,
-                     db='hit_probability',
-                     charset='utf8mb4',
-                     cursorclass=pymysql.cursors.DictCursor)
 
 # This is the section where the queries are ran to get the needed data. It runs the queries and then keeps the data in a Pandas DataFrame
 try:

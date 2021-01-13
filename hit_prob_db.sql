@@ -74,3 +74,20 @@ is_3b TINYINT,
 is_hr TINYINT,
 launch_angle TINYINT
 );
+
+CREATE TABLE IF NOT EXISTS fg_guts (
+year SMALLINT,
+woba DECIMAL(5,3),
+wobascale DECIMAL(5,3),
+wbb DECIMAL(5,3),
+whbp DECIMAL(5,3),
+w1b DECIMAL(5,3),
+w2b DECIMAL(5,3),
+w3b DECIMAL(5,3),
+whr DECIMAL(5,3),
+runsb DECIMAL(5,3),
+runcs DECIMAL(5,3),
+rpa DECIMAL(5,3),
+rw DECIMAL(5,3),
+cfip DECIMAL(5,3)
+);

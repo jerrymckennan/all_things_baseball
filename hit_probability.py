@@ -114,6 +114,8 @@ def fg_data():
     guts = guts[7]
     # Found that there was a random final column in this, the next command deletes it.
     guts.drop(guts.tail(1).index, inplace=True)
+    # MySQL does not like the / in these two columns, renaming them to remove that before saving to CSV file
+    guts..rename(columns={"R/PA":"RPA", "R/W":"RW"},inplace=True)
     
     if path.exists(csv_file2):
         guts.to_csv(csv_file2, mode='a', header=False)

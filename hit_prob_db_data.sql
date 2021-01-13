@@ -122,3 +122,23 @@ launch_angle,
 player_name
 );
 
+LOAD DATA INFILE '/path/fg_guts.csv' INTO TABLE fg_guts
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+( 
+year,
+woba,
+wobascale,
+wbb,
+whbp,
+w1b,
+w2b,
+w3b,
+whr,
+runsb,
+runcs,
+rpa,
+rw,
+cfip
+);

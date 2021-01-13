@@ -69,7 +69,7 @@ def script_start():
     option = input("Which option did you want?: ")
     
     if option == '1': 
-        park_factors()
+        fg_data()
     elif option == '2':
         ev_data()
     elif option == '3':
@@ -81,12 +81,13 @@ def script_start():
         time.sleep(2)
         sys.exit()
 
-
-def park_factors():
+def fg_data():
     
     number = 1
     csv_file = '/Users/jerrymckennan/Documents/JSON/park_factor_totals.csv'
+    csv_file2 = '/Users/jerrymckennan/Documents/JSON/fg_guts.csv'
     
+    # Need  to go through for each team, updating the TeamID
     while number <= 30:
         
         number = str(number)
@@ -95,7 +96,7 @@ def park_factors():
         pf = pd.read_html(url, index_col=0)
         pf_list = pf[8]
         pf_list.fillna(0, inplace=True)
-        print("Working on team "+pf_list['Team'].iloc[0])
+        print("Working on the "+pf_list['Team'].iloc[0])
         
         if path.exists(csv_file):
             pf_list.to_csv(csv_file, mode='a', header=False)
@@ -104,6 +105,20 @@ def park_factors():
         
         number = int(number)
         number = number + 1
+       
+    # GUTS data is on one website. Would use this to manually calculate WAR, wOBA, and other stats
+    print("Now gathering GUTS data to save")
+    url2 = "https://www.fangraphs.com/guts.aspx?type=cn"
+    
+    guts = pd.read_html(url2, index_col = 0)
+    guts = guts[7]
+    # Found that there was a random final column in this, the next command deletes it.
+    guts.drop(guts.tail(1).index, inplace=True)
+    
+    if path.exists(csv_file2):
+        guts.to_csv(csv_file2, mode='a', header=False)
+    else:
+        guts.to_csv(csv_file2)
         
     script_start()
 

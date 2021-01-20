@@ -91,3 +91,27 @@ rpa DECIMAL(5,3),
 rw DECIMAL(5,3),
 cfip DECIMAL(5,3)
 );
+
+CREATE TABLE IF NOT EXISTS barrels AS
+SELECT year, ev, launch_angle
+FROM prob
+WHERE (n_hits/n_hip) >= .500 AND ((n_hits_1b+(n_hits_2b*2)+(n_hits_3b*3)+(n_hits_hr*4))/n_hip) >= 1.500 AND ev = 98 AND launch_angle >= 26 AND launch_angle <=30
+OR (n_hits/n_hip) >= .500 AND ((n_hits_1b+(n_hits_2b*2)+(n_hits_3b*3)+(n_hits_hr*4))/n_hip) >= 1.500 AND ev = 99 AND launch_angle >= 25 AND launch_angle <=31
+OR (n_hits/n_hip) >= .500 AND ((n_hits_1b+(n_hits_2b*2)+(n_hits_3b*3)+(n_hits_hr*4))/n_hip) >= 1.500 AND ev = 100 AND launch_angle >= 24 AND launch_angle <=33
+OR (n_hits/n_hip) >= .500 AND ((n_hits_1b+(n_hits_2b*2)+(n_hits_3b*3)+(n_hits_hr*4))/n_hip) >= 1.500 AND ev = 101 AND launch_angle >= 23 AND launch_angle <=34
+OR (n_hits/n_hip) >= .500 AND ((n_hits_1b+(n_hits_2b*2)+(n_hits_3b*3)+(n_hits_hr*4))/n_hip) >= 1.500 AND ev = 102 AND launch_angle >= 22 AND launch_angle <=35
+OR (n_hits/n_hip) >= .500 AND ((n_hits_1b+(n_hits_2b*2)+(n_hits_3b*3)+(n_hits_hr*4))/n_hip) >= 1.500 AND ev = 103 AND launch_angle >= 21 AND launch_angle <=36
+OR (n_hits/n_hip) >= .500 AND ((n_hits_1b+(n_hits_2b*2)+(n_hits_3b*3)+(n_hits_hr*4))/n_hip) >= 1.500 AND ev = 104 AND launch_angle >= 20 AND launch_angle <=37
+OR (n_hits/n_hip) >= .500 AND ((n_hits_1b+(n_hits_2b*2)+(n_hits_3b*3)+(n_hits_hr*4))/n_hip) >= 1.500 AND ev = 105 AND launch_angle >= 19 AND launch_angle <=38
+OR (n_hits/n_hip) >= .500 AND ((n_hits_1b+(n_hits_2b*2)+(n_hits_3b*3)+(n_hits_hr*4))/n_hip) >= 1.500 AND ev = 106 AND launch_angle >= 18 AND launch_angle <=39
+OR (n_hits/n_hip) >= .500 AND ((n_hits_1b+(n_hits_2b*2)+(n_hits_3b*3)+(n_hits_hr*4))/n_hip) >= 1.500 AND ev = 107 AND launch_angle >= 17 AND launch_angle <=40
+OR (n_hits/n_hip) >= .500 AND ((n_hits_1b+(n_hits_2b*2)+(n_hits_3b*3)+(n_hits_hr*4))/n_hip) >= 1.500 AND ev = 108 AND launch_angle >= 16 AND launch_angle <=41
+OR (n_hits/n_hip) >= .500 AND ((n_hits_1b+(n_hits_2b*2)+(n_hits_3b*3)+(n_hits_hr*4))/n_hip) >= 1.500 AND ev = 109 AND launch_angle >= 15 AND launch_angle <=42
+OR (n_hits/n_hip) >= .500 AND ((n_hits_1b+(n_hits_2b*2)+(n_hits_3b*3)+(n_hits_hr*4))/n_hip) >= 1.500 AND ev = 110 AND launch_angle >= 14 AND launch_angle <=43
+OR (n_hits/n_hip) >= .500 AND ((n_hits_1b+(n_hits_2b*2)+(n_hits_3b*3)+(n_hits_hr*4))/n_hip) >= 1.500 AND ev = 111 AND launch_angle >= 13 AND launch_angle <=44
+OR (n_hits/n_hip) >= .500 AND ((n_hits_1b+(n_hits_2b*2)+(n_hits_3b*3)+(n_hits_hr*4))/n_hip) >= 1.500 AND ev = 112 AND launch_angle >= 12 AND launch_angle <=45
+OR (n_hits/n_hip) >= .500 AND ((n_hits_1b+(n_hits_2b*2)+(n_hits_3b*3)+(n_hits_hr*4))/n_hip) >= 1.500 AND ev = 113 AND launch_angle >= 11 AND launch_angle <=46
+OR (n_hits/n_hip) >= .500 AND ((n_hits_1b+(n_hits_2b*2)+(n_hits_3b*3)+(n_hits_hr*4))/n_hip) >= 1.500 AND ev = 114 AND launch_angle >= 10 AND launch_angle <=47
+OR (n_hits/n_hip) >= .500 AND ((n_hits_1b+(n_hits_2b*2)+(n_hits_3b*3)+(n_hits_hr*4))/n_hip) >= 1.500 AND ev = 115 AND launch_angle >= 9 AND launch_angle <=48
+OR (n_hits/n_hip) >= .500 AND ((n_hits_1b+(n_hits_2b*2)+(n_hits_3b*3)+(n_hits_hr*4))/n_hip) >= 1.500 AND ev >= 116 AND launch_angle >= 8 AND launch_angle <=50
+;

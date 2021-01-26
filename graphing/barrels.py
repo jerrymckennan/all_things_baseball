@@ -1,3 +1,5 @@
+# This shows what is considered a barrel by year as well as what portion compared to all BIP that particular year.
+
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd

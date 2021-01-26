@@ -43,8 +43,8 @@ while True:
             print("Error with password, re-enter:")
             mysql_pass = getpass.getpass()
     finally:
-        connection = pymysql.connect(host='localhost',
-                         user='root',
+        connection = pymysql.connect(host='',
+                         user='',
                          password=mysql_pass,
                          db='hit_probability',
                          charset='utf8mb4',

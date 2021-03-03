@@ -18,11 +18,30 @@ from os import path
 # 2968 qualified relievers w/ average FB velocity (20-43)
 # 2615 starters w/ IP >= 100 (20-47)
 
-st_data = pd.read_csv('/path/file.csv')
-re_data = pd.read_csv('/path/file.csv')
+st_data = pd.read_csv('/Users/jerrymckennan/Documents/JSON/starters_totals.csv')
+re_data = pd.read_csv('/Users/jerrymckennan/Documents/JSON/relievers_totals.csv')
+st_data = st_data[st_data['IP'] >= 150]
 re_data = re_data[re_data['Season'] < 2020]
 st_data['WAR_over_IP'] = st_data['WAR']/st_data['IP']
 re_data['WAR_over_IP'] = re_data['WAR']/re_data['IP']
+
+st_data_war = st_data
+
+st_data.loc[st_data.WAR > 4.99, 'pitcher_num'] = "Ace"
+st_data.loc[st_data.WAR.between(4.25,4.99), 'pitcher_num'] = "1"
+st_data.loc[st_data.WAR.between(3.5,4.25), 'pitcher_num'] = "2"
+st_data.loc[st_data.WAR.between(2.75,3.5), 'pitcher_num'] = "3"
+st_data.loc[st_data.WAR.between(2,2.75), 'pitcher_num'] = "4"
+st_data.loc[st_data.WAR.between(1.25,2), 'pitcher_num'] = "5"
+st_data.loc[st_data.WAR < 1.25, 'pitcher_num'] = "AAA"
+
+st_data_war.loc[st_data_war.WAR > 4.99, 'pitcher_num'] = "Ace"
+st_data_war.loc[st_data_war.WAR.between(4.25,4.99), 'pitcher_num'] = "1"
+st_data_war.loc[st_data_war.WAR.between(3.5,4.25), 'pitcher_num'] = "2"
+st_data_war.loc[st_data_war.WAR.between(2.75,3.5), 'pitcher_num'] = "3"
+st_data_war.loc[st_data_war.WAR.between(2,2.75), 'pitcher_num'] = "4"
+st_data_war.loc[st_data_war.WAR.between(1.25,2), 'pitcher_num'] = "5"
+st_data_war.loc[st_data_war.WAR < 1.25, 'pitcher_num'] = "AAA"
 
 st_data_q1_war = st_data['WAR'].quantile(.25)
 st_data_q3_war = st_data['WAR'].quantile(.75)
@@ -46,16 +65,6 @@ re_high_outlier = re_data_q3_war + (1.5 * re_data_IQR)
 re_data = re_data[re_data['WAR'] < re_high_outlier]
 re_data = re_data[re_data['WAR'] > re_low_outlier]
 
-st_data.loc[st_data.WAR > 4.99, 'pitcher_num'] = "Ace"
-st_data.loc[st_data.WAR.between(4.25,4.99), 'pitcher_num'] = "1"
-st_data.loc[st_data.WAR.between(3.5,4.25), 'pitcher_num'] = "2"
-st_data.loc[st_data.WAR.between(2.5,3.5), 'pitcher_num'] = "3"
-st_data.loc[st_data.WAR.between(1.5,2.5), 'pitcher_num'] = "4"
-st_data.loc[st_data.WAR.between(0.5,1.5), 'pitcher_num'] = "5"
-st_data.loc[st_data.WAR < 0.5, 'pitcher_num'] = "AAA"
-
-st_ace = st_data[st_data['WAR'] > 5]
-
 st_data_velo = st_data[st_data['FBv'] > 0]
 re_data_velo = re_data[re_data['FBv'] > 0]
 
@@ -66,10 +75,9 @@ st_age_mean = pd.DataFrame(columns=['ERA','FIP','xFIP','WAR','IP','Age','FBv', '
 re_age_mean = pd.DataFrame(columns=['ERA','FIP','xFIP','WAR','IP','Age','FBv', 'WAR_over_IP'])
 st_age_mean_velo = pd.DataFrame(columns=['ERA','FIP','xFIP','WAR','IP','Age','FBv', 'WAR_over_IP'])
 re_age_mean_velo = pd.DataFrame(columns=['ERA','FIP','xFIP','WAR','IP','Age','FBv', 'WAR_over_IP'])
-st_ace_mean = pd.DataFrame(columns=['ERA','FIP','xFIP','WAR','IP','Age','FBv', 'WAR_over_IP'])
 war_diff = pd.DataFrame(columns=['WAR', 'Age'])
 velo_diff = pd.DataFrame(columns=['FBv', 'Age'])
-IP_diff = pd.DataFrame(columns=['IP', 'Age'])
+war_IP_diff = pd.DataFrame(columns=['IP', 'Age'])
 
 while st_counter <= max(st_data['Age']):
     st_age = st_data[st_data['Age'] == st_counter].mean()
@@ -79,13 +87,6 @@ while re_counter <= max(re_data['Age']):
     re_age = re_data[re_data['Age'] == re_counter].mean()
     re_age_mean = re_age_mean.append(re_age, ignore_index=True)
     re_counter += 1
-    
-st_counter = 19
-
-while st_counter <= max(st_ace['Age']):
-    st_age_ace = st_ace[st_ace['Age'] == st_counter].mean()
-    st_ace_mean = st_ace_mean.append(st_age_ace, ignore_index=True)
-    st_counter += 1
     
 st_counter = 19
 re_counter = 19
@@ -116,10 +117,10 @@ sns.stripplot(ax=axes[0], data=st_data_velo, x="Age", y="FBv", size=4, hue="pitc
 axes[0].set_ylabel("FB velocity");
 axes[0].legend(title="Rotation spot");
 sns.stripplot(ax=axes[1], data=re_data_velo, x="Age", y="FBv", size=4, color="purple", linewidth=0).set_title("FB velocity range by age for relievers");
-axes[1].set_ylabel("");
+axes[1].set_ylabel(": ");
 sns.regplot(ax=axes[2], data=st_age_mean_velo, x="Age", y="FBv", color="blue").set_title("Starter vs Reliever average FB velocity by age");
 sns.regplot(ax=axes[2], data=re_age_mean_velo, x="Age", y="FBv", color="purple");
-axes[2].set_ylabel("");
+axes[2].set_ylabel(": ");
 axes[2].set_xticks(np.arange(19,49,1));
 axes[0].axhline(y=st_data_velo['FBv'].mean(), color="blue", linestyle='dashed');
 axes[1].axhline(y=re_data_velo['FBv'].mean(), color="purple", linestyle='dashed');
@@ -132,27 +133,26 @@ sns.stripplot(ax=axes2[0], data=st_data, x="Age", y="WAR", size=4, hue="pitcher_
 axes2[0].set_ylabel("fWAR");
 axes2[0].legend(title="Rotation spot");
 sns.stripplot(ax=axes2[1], data=re_data, x="Age", y="WAR", size=4, color="purple", linewidth=0).set_title("fWAR by age for relievers");
-axes2[1].set_ylabel("");
+axes2[1].set_ylabel(": ");
 sns.regplot(ax=axes2[2], data=st_age_mean, x="Age", y="WAR", color="blue").set_title("Starter vs Reliever average fWAR by age");
 sns.regplot(ax=axes2[2], data=re_age_mean, x="Age", y="WAR", color="purple");
-sns.regplot(ax=axes2[2], data=st_ace_mean, x="Age", y="WAR", color="red");
-axes2[2].set_ylabel("");
+axes2[2].set_ylabel(": ");
 axes2[2].set_xticks(np.arange(19,49,1));
 axes2[0].axhline(y=st_data['WAR'].mean(), color="blue", linestyle='dashed');
 axes2[1].axhline(y=re_data['WAR'].mean(), color="purple", linestyle='dashed');
 axes2[2].axhline(y=st_data['WAR'].mean(), color="blue", linestyle='dashed');
 axes2[2].axhline(y=re_data['WAR'].mean(), color="purple", linestyle='dashed');
-axes2[2].legend(['Starter', 'Reliever', 'Ace', str(round(st_data['WAR'].mean(),1)), str(round(re_data['WAR'].mean(),1))]);
+axes2[2].legend(['Starter', 'Reliever', str(round(st_data['WAR'].mean(),1)), str(round(re_data['WAR'].mean(),1))]);
 
 fig3, axes3 = plt.subplots(1, 3, sharey=True, figsize=((30,7)), constrained_layout=True)
 sns.stripplot(ax=axes3[0], data=st_data, x="Age", y="WAR_over_IP", size=4, hue="pitcher_num", hue_order=['Ace','1','2','3','4','5','AAA'], palette="coolwarm_r", linewidth=0).set_title("fWAR/IP by age for starters");
 axes3[0].set_ylabel("fWAR");
 axes3[0].legend(title="Rotation spot");
 sns.stripplot(ax=axes3[1], data=re_data, x="Age", y="WAR_over_IP", size=4, color="purple", linewidth=0).set_title("fWAR/IP by age for relievers");
-axes3[1].set_ylabel("");
+axes3[1].set_ylabel(": ");
 sns.regplot(ax=axes3[2], data=st_age_mean, x="Age", y="WAR_over_IP", color="blue").set_title("Starter vs Reliever average fWAR/IP by age ");
 sns.regplot(ax=axes3[2], data=re_age_mean, x="Age", y="WAR_over_IP", color="purple");
-axes3[2].set_ylabel("");
+axes3[2].set_ylabel(": ");
 axes3[2].set_xticks(np.arange(19,49,1));
 axes3[0].axhline(y=st_data['WAR_over_IP'].mean(), color="blue", linestyle='dashed');
 axes3[1].axhline(y=re_data['WAR_over_IP'].mean(), color="purple", linestyle='dashed');
@@ -165,10 +165,10 @@ sns.stripplot(ax=axes4[0], data=st_data, x="Age", y="IP", size=4, hue="pitcher_n
 axes4[0].set_ylabel("IP");
 axes4[0].legend(title="Rotation spot");
 sns.stripplot(ax=axes4[1], data=re_data, x="Age", y="IP", size=4, color="purple", linewidth=0).set_title("IP by age for relievers");
-axes4[1].set_ylabel("");
+axes4[1].set_ylabel(": ");
 sns.regplot(ax=axes4[2], data=st_age_mean, x="Age", y="IP", color="blue").set_title("Starter vs Reliever average IP by age");
 sns.regplot(ax=axes4[2], data=re_age_mean, x="Age", y="IP", color="purple");
-axes4[2].set_ylabel("");
+axes4[2].set_ylabel(": ");
 axes4[2].set_xticks(np.arange(19,49,1));
 axes4[0].axhline(y=st_data['IP'].mean(), color="blue", linestyle='dashed');
 axes4[1].axhline(y=re_data['IP'].mean(), color="purple", linestyle='dashed');
@@ -188,13 +188,13 @@ axes5[1].set_xticks(np.arange(19,45,1));
 axes5[2].set_xticks(np.arange(19,45,1));
 
 fig6, axes6 = plt.subplots(1, 1, figsize=((30,7)), constrained_layout=True)
-sns.swarmplot(ax=axes6, data=st_data, x="Age", y="WAR", size=4, hue="pitcher_num", hue_order=['Ace','1','2','3','4','5','AAA'], palette="coolwarm_r", linewidth=0).set_title("fWAR by age for starters");
+sns.swarmplot(ax=axes6, data=st_data_war, x="Age", y="WAR", size=3, hue="pitcher_num", hue_order=['Ace','1','2','3','4','5','AAA'], palette="coolwarm_r", linewidth=0).set_title("fWAR by age for starters");
 axes6.legend(title="Rotation spot")
 axes6.axhline(y=5, color="#dc5e4b", linestyle='dashed');
 axes6.axhline(y=4.26, color="#f39879", linestyle='dashed');
-axes6.axhline(y=3.6, color="#f4c3ab", linestyle='dashed');
-axes6.axhline(y=2.6, color="#dddcdb", linestyle='dashed');
-axes6.axhline(y=1.6, color="#b8cff8", linestyle='dashed');
-axes6.axhline(y=0.5, color="#8daffd", linestyle='dashed');
+axes6.axhline(y=3.51, color="#f4c3ab", linestyle='dashed');
+axes6.axhline(y=2.76, color="#dddcdb", linestyle='dashed');
+axes6.axhline(y=2.01, color="#b8cff8", linestyle='dashed');
+axes6.axhline(y=1.26, color="#8daffd", linestyle='dashed');
 
 plt.show()

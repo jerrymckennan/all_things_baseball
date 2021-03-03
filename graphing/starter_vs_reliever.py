@@ -18,8 +18,8 @@ from os import path
 # 2968 qualified relievers w/ average FB velocity (20-43)
 # 2615 starters w/ IP >= 100 (20-47)
 
-st_data = pd.read_csv('/Users/jerrymckennan/Documents/JSON/starters_totals.csv')
-re_data = pd.read_csv('/Users/jerrymckennan/Documents/JSON/relievers_totals.csv')
+st_data = pd.read_csv('/path/file.csv')
+re_data = pd.read_csv('/path/file.csv')
 re_data = re_data[re_data['Season'] < 2020]
 st_data['WAR_over_IP'] = st_data['WAR']/st_data['IP']
 re_data['WAR_over_IP'] = re_data['WAR']/re_data['IP']
